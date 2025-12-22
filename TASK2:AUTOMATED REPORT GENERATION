@@ -1,0 +1,83 @@
+import pandas as pd
+from fpdf import FPDF
+import datetime
+def create_sample_data():
+    data = {
+        'Month': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        'Sales': [15000, 18000, 22000, 19000, 25000, 30000],
+        'Expenses': [8000, 8500, 9000, 8700, 9200, 9500],
+        'Profit': [7000, 9500, 13000, 10300, 15800, 20500],
+        'Customers': [150, 180, 220, 200, 250, 300]
+    }
+    df = pd.DataFrame(data)
+    df.to_csv('sales_data.csv', index=False)
+    return df
+def generate_report(data_file, output_file='report.pdf'):
+
+    df = pd.read_csv(data_file)
+    pdf = FPDF()
+    pdf.add_page()
+    
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(200, 10, "SALES ANALYSIS REPORT", ln=True, align='C')
+    pdf.ln(10)
+    
+    pdf.set_font("Arial", '', 12)
+    pdf.cell(200, 10, f"Date: {datetime.datetime.now().strftime('%Y-%m-%d')}", ln=True)
+    pdf.ln(10)
+    
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(200, 10, "Data Summary:", ln=True)
+    pdf.ln(5)
+    
+    col_width = 40
+    row_height = 10
+    pdf.set_font("Arial", 'B', 10)
+    
+    for col in df.columns:
+        pdf.cell(col_width, row_height, str(col), border=1)
+    pdf.ln(row_height)
+    
+    pdf.set_font("Arial", '', 10)
+    for index, row in df.iterrows():
+        for col in df.columns:
+            pdf.cell(col_width, row_height, str(row[col]), border=1)
+        pdf.ln(row_height)
+    
+    pdf.ln(10)
+    
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(200, 10, "Key Statistics:", ln=True)
+    pdf.set_font("Arial", '', 10)
+    pdf.ln(5)
+    
+    stats = [
+        f"Total Sales: ${df['Sales'].sum():,}",
+        f"Average Sales: ${df['Sales'].mean():,.2f}",
+        f"Highest Sales: ${df['Sales'].max():,} in {df.loc[df['Sales'].idxmax(), 'Month']}",
+        f"Total Profit: ${df['Profit'].sum():,}",
+        f"Profit Margin: {(df['Profit'].sum() / df['Sales'].sum() * 100):.1f}%"
+    ]
+    
+    for stat in stats:
+        pdf.cell(200, 8, stat, ln=True)
+    
+    pdf.ln(10)
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(200, 10, "Conclusion:", ln=True)
+    pdf.set_font("Arial", '', 10)
+    conclusion = "Sales show an upward trend over the six months with consistent profit growth."
+    pdf.multi_cell(0, 8, conclusion)
+    
+    pdf.output(output_file)
+    print(f"Report generated: {output_file}")
+
+if __name__ == "__main__":
+    
+    print("Creating sample data...")
+    create_sample_data()
+    
+    print("Generating PDF report...")
+    generate_report('sales_data.csv', 'sales_report.pdf')
+    
+    print("Done! Check 'sales_report.pdf'")
