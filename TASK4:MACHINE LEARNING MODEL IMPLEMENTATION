@@ -1,0 +1,181 @@
+"""
+Spam Email Detection Model using scikit-learn
+Run this script in Python IDLE or any Python IDE
+"""
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
+import warnings
+warnings.filterwarnings('ignore')
+
+def create_sample_dataset():
+    """
+    Create a sample spam/ham dataset since we don't have a real CSV file
+    In a real scenario, you would load your dataset from a file
+    """
+    
+    emails = [
+        #span
+        "WIN A FREE iPhone TODAY! Click here to claim your prize",
+        "URGENT: Your account has been compromised. Verify now",
+        "Get rich quick! Earn $5000 weekly from home",
+        "Limited time offer: 90% discount on luxury watches",
+        "You've won a lottery! Claim your $1,000,000 prize",
+        "Viagra at lowest prices. Order now",
+        "Nigerian prince needs your help to transfer millions",
+        "Hot singles in your area waiting to meet you",
+        "Your PayPal account needs verification",
+        "Congratulations! You're selected for a free cruise",
+        
+        #non span
+        "Meeting scheduled for tomorrow at 3 PM",
+        "Project report attached for your review",
+        "Lunch tomorrow? Let me know your availability",
+        "Family dinner this weekend at mom's house",
+        "Can you send me the meeting notes from yesterday?",
+        "Homework assignment due next Friday",
+        "Team building event next month",
+        "Your flight confirmation number is ABC123",
+        "Doctor's appointment rescheduled to next week",
+        "Monthly budget report is ready for review"
+    ]
+    
+    
+    labels = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    
+    return pd.DataFrame({
+        'email': emails,
+        'label': labels
+    })
+
+def main():
+    print("=" * 60)
+    print("SPAM EMAIL DETECTION MODEL")
+    print("=" * 60)
+    
+    print("\n1. CREATING SAMPLE DATASET...")
+    data = create_sample_dataset()
+    
+    print(f"Dataset created with {len(data)} emails")
+    print(f"Spam emails: {data['label'].sum()}")
+    print(f"Ham emails: {len(data) - data['label'].sum()}")
+    
+    
+    print("\nSample data:")
+    print(data.head())
+    
+    print("\n2. SPLITTING DATA INTO TRAINING AND TESTING SETS...")
+    X = data['email']
+    y = data['label']
+    
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.3, random_state=42, stratify=y
+    )
+    
+    print(f"Training samples: {len(X_train)}")
+    print(f"Testing samples: {len(X_test)}")
+    
+    print("\n3. CONVERTING TEXT TO NUMERICAL FEATURES...")
+    vectorizer = CountVectorizer(stop_words='english')
+    
+    X_train_vec = vectorizer.fit_transform(X_train)
+    X_test_vec = vectorizer.transform(X_test)
+    
+    print(f"Number of features (words): {len(vectorizer.get_feature_names_out())}")
+    print(f"Sample features: {vectorizer.get_feature_names_out()[:10]}")
+    
+    print("\n4. TRAINING NAIVE BAYES CLASSIFIER...")
+    model = MultinomialNB()
+    model.fit(X_train_vec, y_train)
+    
+    print("Model training completed!")
+    
+    print("\n5. MAKING PREDICTIONS...")
+    y_pred = model.predict(X_test_vec)
+    
+    print("\n6. MODEL EVALUATION")
+    print("-" * 40)
+    
+    accuracy = accuracy_score(y_test, y_pred)
+    print(f"Accuracy: {accuracy:.2%}")
+    
+    print("\nClassification Report:")
+    print(classification_report(y_test, y_pred, 
+                               target_names=['Ham', 'Spam']))
+    
+    print("Confusion Matrix:")
+    cm = confusion_matrix(y_test, y_pred)
+    print(f"True Ham (correct): {cm[0,0]}")
+    print(f"False Spam (ham classified as spam): {cm[0,1]}")
+    print(f"False Ham (spam classified as ham): {cm[1,0]}")
+    print(f"True Spam (correct): {cm[1,1]}")
+    
+    print("\n7. TESTING WITH NEW EMAILS")
+    print("-" * 40)
+    
+    new_emails = [
+        "Free money transfer to your account",
+        "Meeting rescheduled to tomorrow morning",
+        "Buy cheap pharmaceuticals online",
+        "Team meeting agenda for next week"
+    ]
+    
+    new_emails_vec = vectorizer.transform(new_emails)
+    predictions = model.predict(new_emails_vec)
+    probabilities = model.predict_proba(new_emails_vec)
+    
+    for email, pred, prob in zip(new_emails, predictions, probabilities):
+        spam_prob = prob[1] * 100
+        ham_prob = prob[0] * 100
+        result = "SPAM" if pred == 1 else "HAM"
+        
+        print(f"\nEmail: '{email[:50]}...'")
+        print(f"Prediction: {result}")
+        print(f"Spam probability: {spam_prob:.1f}%")
+        print(f"Ham probability: {ham_prob:.1f}%")
+    
+    print("\n8. TOP SPAM INDICATOR WORDS")
+    print("-" * 40)
+    
+    feature_names = vectorizer.get_feature_names_out()
+    coef = model.feature_log_prob_[1] - model.feature_log_prob_[0]
+    
+    top_spam_indices = np.argsort(coef)[-10:][::-1]
+    top_ham_indices = np.argsort(coef)[:10]
+    
+    print("Top 10 Spam Indicators:")
+    for idx in top_spam_indices:
+        print(f"  {feature_names[idx]}: {coef[idx]:.3f}")
+    
+    print("\nTop 10 Ham Indicators:")
+    for idx in top_ham_indices:
+        print(f"  {feature_names[idx]}: {coef[idx]:.3f}")
+    
+    print("\n" + "=" * 60)
+    print("MODEL IMPLEMENTATION COMPLETE!")
+    print("=" * 60)
+    
+    print("\nTo save this model for later use:")
+    print("""
+    import pickle
+    
+    # Save the model
+    with open('spam_model.pkl', 'wb') as f:
+        pickle.dump(model, f)
+    
+    # Save the vectorizer
+    with open('vectorizer.pkl', 'wb') as f:
+        pickle.dump(vectorizer, f)
+    
+    # Load the model later
+    with open('spam_model.pkl', 'rb') as f:
+        loaded_model = pickle.load(f)
+    """)
+
+if __name__ == "__main__":
+    main()
+
