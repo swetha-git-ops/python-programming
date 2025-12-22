@@ -1,0 +1,99 @@
+import nltk
+import random
+import string
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+nltk.download('punkt', quiet=True)
+nltk.download('wordnet', quiet=True)
+nltk.download('omw-eng', quiet=True)
+
+knowledge_base = {
+    "greeting": [
+        "Hello! How can I help you today?",
+        "Hi there! What can I do for you?",
+        "Greetings! I'm here to assist you."
+    ],
+    "farewell": [
+        "Goodbye! Have a great day!",
+        "See you later!",
+        "Bye! Feel free to come back if you have more questions."
+    ],
+    "capabilities": [
+        "I can answer questions about various topics like greetings, weather, time, and general information.",
+        "I'm a simple chatbot that can respond to basic queries using natural language processing.",
+        "My capabilities include understanding and responding to common questions and conversations."
+    ],
+    "weather": [
+        "I don't have real-time weather data, but you can check websites like weather.com for accurate forecasts.",
+        "For weather information, I recommend checking a dedicated weather service or app."
+    ],
+    "time": [
+        "I don't have access to current time, but you can check your device's clock for accurate time.",
+        "For the current time, please check your system clock."
+    ],
+    "creator": [
+        "I was created as an example NLP chatbot using Python and NLTK.",
+        "I'm a demo chatbot built with Natural Language Processing techniques."
+    ],
+    "default": [
+        "I'm not sure I understand. Could you please rephrase your question?",
+        "I don't have an answer for that. Try asking something else.",
+        "That's interesting. Could you ask me something else?"
+    ]
+}
+
+def preprocess_text(text):
+    text = text.lower()
+    text = text.translate(str.maketrans('', '', string.punctuation))
+    return text
+
+def get_response(user_input):
+    user_input = preprocess_text(user_input)
+    
+    if any(word in user_input for word in ['hello', 'hi', 'hey', 'greetings']):
+        return random.choice(knowledge_base["greeting"])
+    
+    elif any(word in user_input for word in ['bye', 'goodbye', 'see you', 'exit']):
+        return random.choice(knowledge_base["farewell"])
+    
+    elif any(word in user_input for word in ['what can you do', 'capabilities', 'help']):
+        return random.choice(knowledge_base["capabilities"])
+    
+    elif any(word in user_input for word in ['weather', 'rain', 'sunny', 'temperature']):
+        return random.choice(knowledge_base["weather"])
+    
+    elif any(word in user_input for word in ['time', 'clock', 'hour']):
+        return random.choice(knowledge_base["time"])
+    
+    elif any(word in user_input for word in ['who made you', 'creator', 'developer']):
+        return random.choice(knowledge_base["creator"])
+    
+    else:
+        return random.choice(knowledge_base["default"])
+
+def chatbot():
+    print("=" * 50)
+    print("NLP CHATBOT")
+    print("=" * 50)
+    print("\nType 'quit', 'exit', or 'bye' to end the conversation.")
+    print("Hello! I'm your NLP chatbot. How can I help you today?\n")
+    
+    while True:
+        
+        user_input = input("You: ").strip()
+        
+        if user_input.lower() in ['quit', 'exit', 'bye', 'goodbye']:
+            print(f"Chatbot: {random.choice(knowledge_base['farewell'])}")
+            break
+        
+        if user_input:  
+            response = get_response(user_input)
+            print(f"Chatbot: {response}")
+        else:
+            print("Chatbot: Please type something!")
+        
+        print() 
+
+if __name__ == "__main__":
+    chatbot()
