@@ -1,0 +1,23 @@
+import requests
+import matplotlib.pyplot as plt
+
+API_KEY = "c4652bb9ecc31293aea51f9bb13d4252"
+cities = ["Chennai", "kanchipuram", "ooty", "madurai", "Bengaluru"]
+temperatures = []
+
+for city in cities:
+    url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
+    response = requests.get(url)
+    data = response.json()
+    
+    temperature = data["main"]["temp"]
+    temperatures.append(temperature)
+
+    print(f"Temperature in {city}: {temperature}°C")
+
+plt.figure(figsize=(10,5))
+plt.bar(cities, temperatures)
+plt.title("City Temperature Comparison")
+plt.xlabel("City")
+plt.ylabel("Temperature (°C)")
+plt.show()
