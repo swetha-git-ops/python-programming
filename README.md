@@ -40,6 +40,12 @@ Sales, Expenses, Profit, Customers
 
 *OUTPUT*
 
+<img width="1815" height="697" alt="Image" src="https://github.com/user-attachments/assets/04288a85-6345-4407-a7ad-d8d2263c22c0" />
+
+[TASK 2.csv](https://github.com/user-attachments/files/24306257/TASK.2.csv)
+
+[TASK2.pdf](https://github.com/user-attachments/files/24306275/TASK2.pdf)
+
 
 
 
