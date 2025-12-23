@@ -46,6 +46,20 @@ Sales, Expenses, Profit, Customers
 
 [TASK2.pdf](https://github.com/user-attachments/files/24306275/TASK2.pdf)
 
+**TASK 3: AI CHATBOX WITH NLP**
+
+A basic Python chatbot using NLTK that answers common questions.
+Features:
+Responds to greetings, weather, time questions.
+Uses keyword matching.
+Preprocesses text automatically.
+
+*OUTPUT*
+
+
+
+
+
 
 
 
