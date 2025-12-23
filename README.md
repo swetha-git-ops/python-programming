@@ -56,6 +56,21 @@ Preprocesses text automatically.
 
 *OUTPUT*
 
+<img width="1826" height="858" alt="Image" src="https://github.com/user-attachments/assets/be3c3bfd-d7c9-4ead-994e-6726f8ac2a49" />
+
+**TASK 4: MACHINE LEARNING MODEL IMPLEMENTATION**
+
+ML model to identify spam emails using Naive Bayes.
+
+Creates sample spam/regular emails:
+Trains classifier
+Predicts if new emails are spam
+Shows accuracy and top spam words
+
+*OUTPUT*
+
+
+
 
 
 
