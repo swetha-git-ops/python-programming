@@ -69,6 +69,19 @@ Shows accuracy and top spam words
 
 *OUTPUT*
 
+<img width="1806" height="927" alt="Image" src="https://github.com/user-attachments/assets/40dec85e-7377-40a4-b7a2-0313676506dd" />
+
+<img width="1817" height="920" alt="Image" src="https://github.com/user-attachments/assets/e45be864-2ee2-4bab-84d7-8284ca03a1cb" />
+
+<img width="1802" height="888" alt="Image" src="https://github.com/user-attachments/assets/5c6c7faf-1834-4c3e-a014-1fbbbf4b892c" />
+
+<img width="1821" height="947" alt="Image" src="https://github.com/user-attachments/assets/e87b5bb6-6f43-48cf-b965-efcd7562ea87" />
+
+<img width="1827" height="893" alt="Image" src="https://github.com/user-attachments/assets/d52dbb8f-03e9-4dfd-a1d7-b3c208118230" />
+
+<img width="1800" height="880" alt="Image" src="https://github.com/user-attachments/assets/c6a4d6cc-0a4f-4759-b821-536e18440357" />
+
+
 
 
 
